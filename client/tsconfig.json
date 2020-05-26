@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "ES6", "dom.iterable", "esnext"],
+    "target": "es6",
+    "lib": ["dom", "ES6", "ES7", "dom.iterable", "esnext"],
     "baseUrl": ".",
     "paths": {
       "@components": ["./src/components"],
