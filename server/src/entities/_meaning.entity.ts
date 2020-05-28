@@ -18,7 +18,7 @@ export class Meaning {
   @Column({ type: "varchar" })
   example: string;
 
-  @ManyToOne((type) => Word)
+  @ManyToOne((type) => Word, (word) => word.meanings, { onDelete: "CASCADE" })
   @JoinColumn()
   word: Word;
 }

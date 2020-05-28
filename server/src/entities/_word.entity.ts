@@ -16,10 +16,10 @@ export class Word {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "varchar" })
+  @Column({ type: "varchar", unique: true })
   name: string;
 
-  @ManyToOne((type) => Tom)
+  @ManyToOne((type) => Tom, {onDelete: "CASCADE"})
   @JoinColumn()
   tom: Tom;
 

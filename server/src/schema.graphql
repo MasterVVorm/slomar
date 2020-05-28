@@ -2,12 +2,15 @@ type Query {
   tom(id: ID!): Tom
   toms: [Tom]
   word(id: ID!): Word
-  words: [Word]
+  words(skip: Int = 0, take: Int = 10): [Word]
 }
 
 type Mutation {
+  login(email: String!, password: String!): String
   addTom(name: String!): Tom!
-  addWord(tom: Int!, name: String!, meanings: [MeaningInput]): Word!
+  addWord(tom: Int!, name: String!, meanings: [MeaningInput!]!): Word!
+  deleteWord(word: Int!): Word!
+  addMeaning(word: Int!, text: String, example: String): Meaning!
 }
 
 input MeaningInput {

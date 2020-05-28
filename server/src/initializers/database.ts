@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { createConnection, Connection } from "typeorm";
-import { Tom, Word, Meaning } from "@entities";
+import { User, Tom, Word, Meaning } from "@entities";
 
 export const databaseInitializer = async (): Promise<Connection> => {
   return await createConnection({
@@ -10,7 +10,7 @@ export const databaseInitializer = async (): Promise<Connection> => {
     username: "slomadmin",
     password: "slom2020",
     database: "slom",
-    entities: [Tom, Word, Meaning],
+    entities: [User, Tom, Word, Meaning],
     logging: ["error"],
     synchronize: true,
   }).then((connection) => {

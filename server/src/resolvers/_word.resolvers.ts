@@ -1,5 +1,6 @@
 import { Tom, Word, Meaning } from "@entities";
-import { Connection } from "typeorm";
+import { Connection, QueryFailedError } from "typeorm";
+import { ApolloError } from "apollo-server-koa";
 
 interface MeaningProps {
   text: string;
@@ -15,9 +16,20 @@ interface addWordAgrs {
 export const createWordResolvers = (connection: Connection) => ({
   Query: {
     word: async (_parent, _args): Promise<Object> =>
-      connection.manager.findOne(Word, {where: {id: _args.id}, relations: ["tom", "meanings"] }),
+      connection.manager.findOne(Word, {
+        where: { id: _args.id },
+        relations: ["tom", "meanings"],
+      }),
 
-    words: (): Promise<Array<Object>> => connection.manager.find(Word, {order: {id: "ASC"}, relations: ["tom","meanings"]}),
+    words: (_parent, _args, { user }): Promise<Array<Object>> => {
+      console.log(user);
+      return connection.manager.find(Word, {
+        skip: _args.skip,
+        take: _args.take,
+        order: { name: "ASC" },
+        relations: ["tom", "meanings"],
+      });
+    },
   },
   Mutation: {
     addWord: async (_parent, _args: addWordAgrs) => {
@@ -47,7 +59,25 @@ export const createWordResolvers = (connection: Connection) => ({
 
         return word;
       } catch (error) {
-        return error;
+        switch (error.code) {
+          case "23505":
+            throw new ApolloError("Word name must be unique", "400");
+          default:
+            throw new ApolloError("Something went wrong", error);
+        }
+      }
+    },
+
+    deleteWord: async (_parent, _args) => {
+      try {
+        const word = await connection.manager.findOne(Word, { id: _args.word });
+        if (!word) {
+          throw new Error("Word doesn't exist");
+        }
+        return await connection.manager.remove(word!);
+      } catch (error) {
+        console.log(error);
+        throw new ApolloError(error, "400");
       }
     },
   },

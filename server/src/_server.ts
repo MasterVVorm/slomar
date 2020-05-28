@@ -1,10 +1,21 @@
 import Koa from "koa";
+import koaJwt from "koa-jwt";
 import { databaseInitializer } from "@initializers/database";
 import { ApolloServer } from "apollo-server-koa";
 import { importSchema } from "graphql-import";
 import path from "path";
 import { merge } from "lodash";
-import { createTomResolvers, createWordResolvers } from "@resolvers";
+import dotenv from "dotenv";
+
+import {
+  createTomResolvers,
+  createWordResolvers,
+  createMeaningResolvers,
+  createAuthResolvers,
+} from "@resolvers";
+
+dotenv.config();
+const PORT = process.env.PORT;
 
 export const startApp = async () => {
   const connection = await databaseInitializer();
@@ -15,17 +26,23 @@ export const startApp = async () => {
     typeDefs,
     resolvers: merge(
       createTomResolvers(connection),
-      createWordResolvers(connection)
+      createWordResolvers(connection),
+      createMeaningResolvers(connection),
+      createAuthResolvers(connection)
     ),
+    context: ({ ctx: { state: user } }) => ({
+      user,
+    }),
     playground: true,
   });
 
   const app = new Koa();
+  app.use(koaJwt({ secret: process.env.JWT_SECRET, passthrough: true }));
   server.applyMiddleware({ app });
 
-  app.listen({ port: 4000 }, () =>
+  app.listen({ port: PORT }, () =>
     console.log(
-      `\n 🚀 Server ready at http://localhost:4000${server.graphqlPath}`
+      `\n 🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
     )
   );
 };
