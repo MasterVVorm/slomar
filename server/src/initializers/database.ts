@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { createConnection, Connection } from "typeorm";
-import { Tom } from "@entities";
+import { Tom, Word, Meaning } from "@entities";
 
-export const databaseInitializer = async () => {
+export const databaseInitializer = async (): Promise<Connection> => {
   return await createConnection({
     type: "postgres",
     host: "localhost",
@@ -10,10 +10,11 @@ export const databaseInitializer = async () => {
     username: "slomadmin",
     password: "slom2020",
     database: "slom",
-    entities: [Tom],
-    logging: ["query", "error"],
+    entities: [Tom, Word, Meaning],
+    logging: ["error"],
     synchronize: true,
-  }).then((...args) => {
+  }).then((connection) => {
     console.log("Database connection established");
+    return connection;
   });
 };

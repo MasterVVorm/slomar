@@ -30,6 +30,13 @@ const $GlobalStyle = createGlobalStyle`
 
   @font-face {
     font-family: 'Lato';
+    src: url('/assets/fonts/latoitalic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  @font-face {
+    font-family: 'Lato';
     src: url('/assets/fonts/latomedium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;

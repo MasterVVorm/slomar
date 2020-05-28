@@ -2,22 +2,23 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  CreateDateColumn,
-  UpdateDateColumn,
+  JoinColumn,
+  ManyToOne,
 } from "typeorm";
 import { Word } from "./_word.entity";
 
 @Entity()
-export class Tom {
+export class Meaning {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: "varchar" })
-  name: string;
+  text: string;
 
-  @CreateDateColumn()
-  created: string;
+  @Column({ type: "varchar" })
+  example: string;
 
-  @UpdateDateColumn()
-  updated: string;
+  @ManyToOne((type) => Word)
+  @JoinColumn()
+  word: Word;
 }

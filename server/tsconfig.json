@@ -13,7 +13,8 @@
     "baseUrl": "./",
     "paths": {
       "@entities": ["src/entities"],
-      "@initializers/*": ["src/initializers/*"]
+      "@initializers/*": ["src/initializers/*"],
+      "@resolvers": ["src/resolvers"]
     }
   },
   "exclude": ["node_modules", "**/*.spec.ts"]

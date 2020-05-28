@@ -1,3 +1,40 @@
 type Query {
-  hello: String!
+  tom(id: ID!): Tom
+  toms: [Tom]
+  word(id: ID!): Word
+  words: [Word]
+}
+
+type Mutation {
+  addTom(name: String!): Tom!
+  addWord(tom: Int!, name: String!, meanings: [MeaningInput]): Word!
+}
+
+input MeaningInput {
+  text: String!
+  example: String!
+}
+
+type Tom {
+  id: ID!
+  name: String!
+  created: String!
+  updated: String!
+}
+
+type Word {
+  id: ID!
+  name: String!
+  status: String!
+  tom: Tom
+  meanings: [Meaning!]
+  created: String!
+  updated: String!
+}
+
+type Meaning {
+  id: ID!
+  text: String!
+  example: String!
+  word: Word!
 }
