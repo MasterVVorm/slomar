@@ -20,15 +20,14 @@ const word = async (_parent, _args, { connection }: ContextProps): Promise<Objec
   });
 
 const words = (_parent, _args, { user, connection }): Promise<Array<Object>> => {
-  return connection.manager.find(Word, {
+  const options = {
     skip: _args.skip,
     take: _args.take,
-    where: {
-      tom: _args.tom,
-    },
+    where: _args.tom ? { tom: _args.tom } : null,
     order: { name: "ASC" },
     relations: ["tom", "meanings"],
-  });
+  };
+  return connection.manager.find(Word, options);
 };
 
 const addWord = async (_parent, _args: addWordAgrs, { user, connection }: ContextProps) => {
