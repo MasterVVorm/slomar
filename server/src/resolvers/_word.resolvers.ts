@@ -13,82 +13,88 @@ interface addWordAgrs {
   meanings: [MeaningProps];
 }
 
+const word = async (_parent, _args, { connection }: ContextProps): Promise<Object> =>
+  connection.manager.findOne(Word, {
+    where: { id: _args.id },
+    relations: ["tom", "meanings"],
+  });
+
+const words = (_parent, _args, { user, connection }): Promise<Array<Object>> => {
+  return connection.manager.find(Word, {
+    skip: _args.skip,
+    take: _args.take,
+    where: {
+      tom: _args.tom,
+    },
+    order: { name: "ASC" },
+    relations: ["tom", "meanings"],
+  });
+};
+
+const addWord = async (_parent, _args: addWordAgrs, { user, connection }: ContextProps) => {
+  if (!user) {
+    throw new ApolloError("Auth error", "403");
+  }
+
+  const { tom: tomId, name, meanings } = _args;
+
+  try {
+    const tom = await connection.manager.findOne(Tom, { id: tomId });
+
+    const word = new Word();
+    word.name = name;
+    word.tom = tom;
+    word.meanings = [];
+
+    let _meanings: Array<Meaning> = [];
+
+    for (let meaning of meanings) {
+      let _meaning = new Meaning();
+      _meaning.text = meaning.text;
+      _meaning.example = meaning.example;
+      await connection.manager.save(_meaning);
+      _meanings.push(_meaning);
+    }
+
+    word.meanings = _meanings;
+
+    await connection.manager.save(word);
+
+    return word;
+  } catch (error) {
+    switch (error.code) {
+      case "23505":
+        throw new ApolloError("Word name must be unique", "400");
+      default:
+        throw new ApolloError("Something went wrong", error);
+    }
+  }
+};
+
+const deleteWord = async (_parent, _args, { user, connection }: ContextProps) => {
+  if (!user) {
+    throw new ApolloError("Auth error", "403");
+  }
+
+  try {
+    const word = await connection.manager.findOne(Word, { id: _args.word });
+    if (!word) {
+      throw new Error("Word doesn't exist");
+    }
+    return await connection.manager.remove(word!);
+  } catch (error) {
+    console.log(error);
+    throw new ApolloError(error, "400");
+  }
+};
+
 export const wordResolvers = {
   Query: {
-    word: async (_parent, _args, { connection }: ContextProps): Promise<Object> =>
-      connection.manager.findOne(Word, {
-        where: { id: _args.id },
-        relations: ["tom", "meanings"],
-      }),
-
-    words: (_parent, _args, { user, connection }): Promise<Array<Object>> => {
-      return connection.manager.find(Word, {
-        skip: _args.skip,
-        take: _args.take,
-        where: {
-          tom: _args.tom,
-        },
-        order: { name: "ASC" },
-        relations: ["tom", "meanings"],
-      });
-    },
+    word,
+    words,
   },
   Mutation: {
-    addWord: async (_parent, _args: addWordAgrs, { user, connection }: ContextProps) => {
-      if (!user) {
-        throw new ApolloError("Auth error", "403");
-      }
-
-      const { tom: tomId, name, meanings } = _args;
-
-      try {
-        const tom = await connection.manager.findOne(Tom, { id: tomId });
-
-        const word = new Word();
-        word.name = name;
-        word.tom = tom;
-        word.meanings = [];
-
-        let _meanings: Array<Meaning> = [];
-
-        for (let meaning of meanings) {
-          let _meaning = new Meaning();
-          _meaning.text = meaning.text;
-          _meaning.example = meaning.example;
-          await connection.manager.save(_meaning);
-          _meanings.push(_meaning);
-        }
-
-        word.meanings = _meanings;
-
-        await connection.manager.save(word);
-
-        return word;
-      } catch (error) {
-        switch (error.code) {
-          case "23505":
-            throw new ApolloError("Word name must be unique", "400");
-          default:
-            throw new ApolloError("Something went wrong", error);
-        }
-      }
-    },
-
-    deleteWord: async (_parent, _args, { user, connection }: ContextProps) => {
-      if (!user) {
-        throw new ApolloError("Auth error", "403");
-      }
-
-      try {
-        const word = await connection.manager.findOne(Word, { id: _args.word });
-        if (!word) {
-          throw new Error("Word doesn't exist");
-        }
-        return await connection.manager.remove(word!);
-      } catch (error) {
-        console.log(error);
-        throw new ApolloError(error, "400");
-      }
-    },
+    addWord,
+    deleteWord,
   },
 };
