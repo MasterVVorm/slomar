@@ -1,5 +1,5 @@
 import { Word, Meaning } from "@entities";
-import { Connection } from "typeorm";
+import { ContextProps } from "@interfaces";
 
 interface argsProps {
   word: number;
@@ -7,10 +7,11 @@ interface argsProps {
   example: string;
 }
 
-export const createMeaningResolvers = (connection: Connection) => ({
+export const meaningResolvers = {
   Mutation: {
-    addMeaning: async (_parent, _args: argsProps) => {
+    addMeaning: async (_parent, _args: argsProps, { connection }: ContextProps) => {
       const { word: wordId, text, example } = _args;
+
       const word = await connection.manager.findOne(Word, {
         where: { id: wordId },
       });
@@ -24,4 +25,4 @@ export const createMeaningResolvers = (connection: Connection) => ({
       return meaning;
     },
   },
-});
+};

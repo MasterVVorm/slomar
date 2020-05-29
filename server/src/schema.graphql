@@ -2,14 +2,24 @@ type Query {
   tom(id: ID!): Tom
   toms: [Tom]
   word(id: ID!): Word
-  words(skip: Int = 0, take: Int = 10): [Word]
+  words(skip: Int = 0, take: Int = 10, tom: Int): [Word]
 }
 
 type Mutation {
   login(email: String!, password: String!): String
+}
+
+type Mutation {
   addTom(name: String!): Tom!
+  deleteTom(tom: Int!): Tom!
+}
+
+type Mutation {
   addWord(tom: Int!, name: String!, meanings: [MeaningInput!]!): Word!
   deleteWord(word: Int!): Word!
+}
+
+type Mutation {
   addMeaning(word: Int!, text: String, example: String): Meaning!
 }
 

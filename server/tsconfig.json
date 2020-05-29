@@ -14,7 +14,10 @@
     "paths": {
       "@entities": ["src/entities"],
       "@initializers/*": ["src/initializers/*"],
-      "@resolvers": ["src/resolvers"]
+      "@resolvers": ["src/resolvers"],
+      "@decorators": ["src/decorators"],
+      "@interfaces": ["src/interfaces"],
+      "@middleware": ["src/middleware"]
     }
   },
   "exclude": ["node_modules", "**/*.spec.ts"]

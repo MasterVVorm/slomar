@@ -3,10 +3,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "@entities";
 import { ApolloError, AuthenticationError } from "apollo-server-koa";
+import { ContextProps } from "@interfaces";
 
-export const createAuthResolvers = (connection: Connection) => ({
+export const authResolvers = {
   Mutation: {
-    login: async (_, { email, password }) => {
+    login: async (_, { email, password }, { connection }: ContextProps) => {
       const user = await connection.manager.findOne(User, { email: email });
 
       if (!user) {
@@ -16,9 +17,7 @@ export const createAuthResolvers = (connection: Connection) => ({
       const valid = await bcrypt.compare(password, user.password);
 
       if (!valid) {
-        throw new AuthenticationError(
-          "Can't authrenticate with provided credentials"
-        );
+        throw new AuthenticationError("Can't authrenticate with provided credentials");
       }
 
       return jwt.sign({ user }, process.env.JWT_SECRET, {
@@ -26,4 +25,4 @@ export const createAuthResolvers = (connection: Connection) => ({
       });
     },
   },
-});
+};

@@ -14,7 +14,7 @@ rl.question("Enter email: ", (email) => {
 
     bcrypt.hash(password, 10, (err, hash) => {
       const user = new User();
-      user.email = "mvincha404@gmail.com";
+      user.email = email;
       user.password = hash;
       user.is_admin = true;
 

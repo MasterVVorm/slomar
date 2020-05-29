@@ -1,6 +1,6 @@
 import { Tom, Word, Meaning } from "@entities";
-import { Connection, QueryFailedError } from "typeorm";
 import { ApolloError } from "apollo-server-koa";
+import { ContextProps } from "@interfaces";
 
 interface MeaningProps {
   text: string;
@@ -13,26 +13,32 @@ interface addWordAgrs {
   meanings: [MeaningProps];
 }
 
-export const createWordResolvers = (connection: Connection) => ({
+export const wordResolvers = {
   Query: {
-    word: async (_parent, _args): Promise<Object> =>
+    word: async (_parent, _args, { connection }: ContextProps): Promise<Object> =>
       connection.manager.findOne(Word, {
         where: { id: _args.id },
         relations: ["tom", "meanings"],
       }),
 
-    words: (_parent, _args, { user }): Promise<Array<Object>> => {
-      console.log(user);
+    words: (_parent, _args, { user, connection }): Promise<Array<Object>> => {
       return connection.manager.find(Word, {
         skip: _args.skip,
         take: _args.take,
+        where: {
+          tom: _args.tom,
+        },
         order: { name: "ASC" },
         relations: ["tom", "meanings"],
       });
     },
   },
   Mutation: {
-    addWord: async (_parent, _args: addWordAgrs) => {
+    addWord: async (_parent, _args: addWordAgrs, { user, connection }: ContextProps) => {
+      if (!user) {
+        throw new ApolloError("Auth error", "403");
+      }
+
       const { tom: tomId, name, meanings } = _args;
 
       try {
@@ -68,7 +74,11 @@ export const createWordResolvers = (connection: Connection) => ({
       }
     },
 
-    deleteWord: async (_parent, _args) => {
+    deleteWord: async (_parent, _args, { user, connection }: ContextProps) => {
+      if (!user) {
+        throw new ApolloError("Auth error", "403");
+      }
+
       try {
         const word = await connection.manager.findOne(Word, { id: _args.word });
         if (!word) {
@@ -81,4 +91,4 @@ export const createWordResolvers = (connection: Connection) => ({
       }
     },
   },
-});
+};
