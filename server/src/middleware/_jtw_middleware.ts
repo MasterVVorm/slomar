@@ -11,17 +11,22 @@ export function createJwtMiddleware(connection: Connection) {
 
     if (token) {
       token = token.split(" ")[1];
-      let decoded = <any>jsonwebtoken.verify(token, process.env.JWT_SECRET);
+      try{
+        let decoded = <any>jsonwebtoken.verify(token, process.env.JWT_SECRET);
 
-      if (decoded.id) {
-        const _user = await connection.manager.findOne(User, {
-          id: decoded.id,
-        });
-
-        if (_user) {
-          user = _user;
+        if (decoded.id) {
+          const _user = await connection.manager.findOne(User, {
+            id: decoded.id,
+          });
+  
+          if (_user) {
+            user = _user;
+          }
         }
+      } catch(error){
+        console.log("Token expired!!!!")
       }
+      
     }
 
     ctx.state = user;

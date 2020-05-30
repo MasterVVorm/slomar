@@ -7,7 +7,7 @@ import { merge } from "lodash";
 import dotenv from "dotenv";
 
 import { databaseInitializer } from "@initializers/database";
-import { authResolvers, tomResolvers, wordResolvers, meaningResolvers } from "@resolvers";
+import { authResolvers, tomResolvers, wordResolvers, meaningResolvers, searchResolvers } from "@resolvers";
 import { createJwtMiddleware } from "@middleware";
 
 dotenv.config();
@@ -24,7 +24,7 @@ export const startApp = async () => {
 
   const server = new ApolloServer({
     typeDefs,
-    resolvers: merge(authResolvers, tomResolvers, wordResolvers, meaningResolvers),
+    resolvers: merge(authResolvers, tomResolvers, wordResolvers, meaningResolvers, searchResolvers),
     context: async ({ ctx: { state: user } }) => ({
       connection,
       user,

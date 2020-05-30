@@ -3,6 +3,8 @@ type Query {
   toms: [Tom]
   word(id: ID!): Word
   words(skip: Int = 0, take: Int = 10, tom: Int): [Word]
+
+  search(word: String!): [Word]
 }
 
 type Mutation {
