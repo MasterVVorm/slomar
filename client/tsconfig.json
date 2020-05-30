@@ -8,7 +8,8 @@
       "@constants": ["./src/constants"],
       "@interfaces": ["./src/interfaces"],
       "@db/*": ["./src/db/*"],
-      "@entities": ["./src/db/entities"]
+      "@entities": ["./src/db/entities"],
+      "@lib": ["./src/lib"]
     },
     "allowJs": true,
     "skipLibCheck": true,

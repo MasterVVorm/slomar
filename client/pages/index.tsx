@@ -15,7 +15,7 @@ export default function MainPage() {
         <br />
         ОБСЦЕННОЙ ТРИАДЫ РУССКОГО ЯЗЫКА
       </$Title>
-      <SearchInput />
+      <SearchInput placeholder={"Спорим, что ты не сможешь придумать новый?"} />
     </$Container>
   );
 }

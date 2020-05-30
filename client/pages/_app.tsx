@@ -2,14 +2,16 @@ import { AppProps } from "next/app";
 import { Fragment } from "react";
 import { Navbar } from "@components";
 import { createGlobalStyle } from "styled-components";
+import { ApolloProvider } from "@apollo/react-hooks";
+import { client } from "@lib";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Fragment>
-      <$GlobalStyle />
-      <Navbar />
-      <Component {...pageProps} />
-    </Fragment>
+    <ApolloProvider client={client}>
+        <$GlobalStyle />
+        <Navbar />
+        <Component {...pageProps} />
+    </ApolloProvider>
   );
 }
 
@@ -52,6 +54,7 @@ const $GlobalStyle = createGlobalStyle`
   *{
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
   }
 
   html, body{
