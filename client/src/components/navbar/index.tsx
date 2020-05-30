@@ -2,28 +2,29 @@ import styled from "styled-components";
 import { SubscribeButton, Logo } from "@components";
 import { NavlinkProps } from "@interfaces";
 import { Navlink } from "../navlink";
+import { grayColor } from "@constants";
 
 const links: Array<NavlinkProps> = [
   {
     href: "/",
-    text: "Главная"
+    text: "Главная",
   },
   {
     href: "/dictionary",
-    text: "Словарь"
+    text: "Словарь",
   },
   {
     href: "/contacts",
-    text: "Контакты"
-  }
+    text: "Контакты",
+  },
 ];
 
 export const Navbar = () => (
   <$Container>
     <Logo />
     <$NavItems>
-      {links.map(link => (
-        <Navlink {...link} />
+      {links.map((link) => (
+        <Navlink key={link.text} {...link} />
       ))}
     </$NavItems>
     <SubscribeButton />
@@ -40,7 +41,7 @@ const $Container = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 1px ${grayColor['200']};
 `;
 
 const $NavItems = styled.div`

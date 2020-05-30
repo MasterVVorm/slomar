@@ -1,8 +1,13 @@
 import styled from "styled-components";
+import Link from "next/link";
 
-export const Logo = () => <$Container></$Container>;
+export const Logo = () => (
+  <Link href="/" passHref>
+    <$Container></$Container>
+  </Link>
+);
 
-const $Container = styled.div`
+const $Container = styled.a`
   position: relative;
   width: 81px;
   height: 29px;

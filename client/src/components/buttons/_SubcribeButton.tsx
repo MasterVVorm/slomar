@@ -1,18 +1,21 @@
 import styled from "styled-components";
+import Link from "next/link";
 import { blueColor, grayColor } from "@constants";
 
 export const SubscribeButton = () => (
   <$Container>
-    <$Block>
-      <$Icon />
-      <$Text>Подписаться</$Text>
-    </$Block>
+    <Link href={'/subscribe'} passHref>
+      <$Block>
+        <$Icon />
+        <$Text>Подписаться</$Text>
+      </$Block>
+    </Link>
   </$Container>
 );
 
 const trsn = ".3s";
 
-const $Block = styled.div`
+const $Block = styled.a`
   position: absolute;
   top: 0;
   right: 0;
@@ -25,6 +28,7 @@ const $Block = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  text-decoration: none;
 `;
 
 const $Icon = styled.div`
@@ -61,7 +65,7 @@ const $Container = styled.div`
       transform: translate(-83px, -10px) scale(1);
     }
 
-    ${$Text}{
+    ${$Text} {
       opacity: 1;
       transform: scale(1);
     }
