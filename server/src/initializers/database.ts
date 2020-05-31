@@ -5,7 +5,7 @@ import { User, Tom, Word, Meaning } from "@entities";
 export const databaseInitializer = async (): Promise<Connection> => {
   return await createConnection({
     type: "postgres",
-    host: "localhost",
+    host: process.env.DB_HOST || "localhost",
     port: 5432,
     username: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
