@@ -1,4 +1,3 @@
-import { Connection } from "typeorm";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "@entities";

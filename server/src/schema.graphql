@@ -1,7 +1,7 @@
 type Query {
   tom(id: ID!): Tom
   toms: [Tom]
-  word(id: ID!): Word
+  word(name: String!): Word
   words(skip: Int = 0, take: Int = 10, tom: Int): [Word]
 
   search(word: String!): [Word]
@@ -35,6 +35,7 @@ type Tom {
   name: String!
   created: String!
   updated: String!
+  words_amount: Int
 }
 
 type Word {

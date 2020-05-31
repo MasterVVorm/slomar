@@ -1,4 +1,4 @@
-import { Tom } from "@entities";
+import { Tom, Word } from "@entities";
 import { ApolloError } from "apollo-server-koa";
 import { ContextProps } from "@interfaces";
 
@@ -7,7 +7,17 @@ export const tomResolvers = {
     tom: async (_parent, _args, { connection }: ContextProps): Promise<Object> =>
       connection.manager.findOne(Tom, { id: _args.id }),
 
-    toms: (_parent, _args, { connection }): Promise<Array<Object>> => connection.manager.find(Tom),
+    toms: async (_parent, _args, { connection }): Promise<Array<Object>> => {
+      const toms = await connection.manager.find(Tom);
+
+      for (let i = 0; i < toms.length; i++) {
+        const words = await connection.manager.find(Word, { where: { tom: toms[i] } });
+        console.log(words.length)
+        toms[i].words_amount = words.length;
+      }
+
+      return toms;
+    },
   },
   Mutation: {
     addTom: (_parent, _args, { user, connection }: ContextProps): Promise<Tom> => {

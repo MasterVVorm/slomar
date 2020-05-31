@@ -15,7 +15,7 @@ interface addWordAgrs {
 
 const word = async (_parent, _args, { connection }: ContextProps): Promise<Object> =>
   connection.manager.findOne(Word, {
-    where: { id: _args.id },
+    where: { name: _args.name },
     relations: ["tom", "meanings"],
   });
 
