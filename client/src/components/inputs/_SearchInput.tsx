@@ -5,10 +5,7 @@ import Link from "next/link";
 import { useState, useMemo, useCallback } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-
-interface SearchInputProps {
-  placeholder?: string;
-}
+import { InputProps } from "@interfaces";
 
 interface ResultProps {
   id: string;
@@ -16,6 +13,8 @@ interface ResultProps {
 }
 
 interface SearchResultsProps {
+  show: boolean;
+  word: string;
   results: Array<ResultProps>;
 }
 
@@ -28,28 +27,41 @@ const SEARCH_FOR_WORD = gql`
   }
 `;
 
-const SearchResults = ({ results }: SearchResultsProps) => (
-  <$SearchResults>
-    {results.map((result) => (
-      <Link key={result.id} href={`word/${result.name}`} passHref>
-        <$SearchResult>{result.name}</$SearchResult>
-      </Link>
-    ))}
-  </$SearchResults>
-);
+const SearchResults = ({ show, results, word }: SearchResultsProps) => {
+  if (results.length === 0) {
+    return (
+      <$SearchResults show={show}>
+        <Link href={`addWord/${word}`}>
+          <$AddWord>
+            Похоже, что такого слова еще нет. Жми чтоб добавить, еба
+          </$AddWord>
+        </Link>
+      </$SearchResults>
+    );
+  }
+  return (
+    <$SearchResults show={show}>
+      {results.map((result) => (
+        <Link key={result.id} href={`word/[id]`} as={`word/${result.name}`}>
+          <$SearchResult>{result.name}</$SearchResult>
+        </Link>
+      ))}
+    </$SearchResults>
+  );
+};
 
-export const SearchInput = ({ placeholder }: SearchInputProps) => {
+export const SearchInput = ({ placeholder }: InputProps) => {
   const [inputValue, setInputValue] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
   const { loading, data, error } = useQuery(SEARCH_FOR_WORD, {
     variables: { word: inputValue },
+    pollInterval: 1000,
   });
+
   const showResults = useMemo(
     () => !!inputValue.length && inputFocused && !loading && !error,
     [inputValue, inputFocused, loading, data, error]
   );
-
-  console.log("DATA: ", data);
 
   const clickHandler = () => {};
 
@@ -64,19 +76,16 @@ export const SearchInput = ({ placeholder }: SearchInputProps) => {
         onChange={({ target }) => setInputValue(target.value)}
       />
       <SearchButton active={false} onClick={clickHandler} />
-      {/* <$Data>{data}</$Data> */}
-      {showResults && <SearchResults results={data.search} />}
+      {!loading && !error && (
+        <SearchResults
+          show={showResults}
+          results={data.search}
+          word={inputValue}
+        />
+      )}
     </$Container>
   );
 };
-
-const $Data = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: white;
-  padding: 20px;
-`;
 
 const $Container = styled.div`
   position: relative;
@@ -92,7 +101,11 @@ const $Input = styled.input`
   outline: none;
   padding: 0 10px 0 10px;
   font-style: italic;
-  color: ${blueColor["600"]};
+  color: ${blueColor["900"]};
+
+  &::placeholder {
+    color: ${blueColor["600"]};
+  }
 `;
 
 const $SearchResults = styled.div`
@@ -105,9 +118,13 @@ const $SearchResults = styled.div`
   background: white;
   overflow-y: auto;
   box-shadow: 0px 0px 8px rgba(50, 69, 103, 0.15);
+  opacity: ${({ show }) => (show ? "1" : "0")};
+  visibility: ${({ show }) => (show ? "visible" : "hidden")};
+  transition: ${dimens.transition};
+  transition-delay: 0.1s;
 `;
 
-const $SearchResult = styled.a`
+const $SearchResult = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -116,8 +133,31 @@ const $SearchResult = styled.a`
   height: 30px;
   text-decoration: none;
   font-size: 14px;
-  color: ${blueColor["900"]};
+  color: ${blueColor["1100"]};
   transition: ${dimens.transition};
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${blueColor["300"]};
+    color: ${grayColor["100"]};
+  }
+
+  &:active {
+    background-color: ${blueColor["500"]};
+    color: ${grayColor["100"]};
+  }
+`;
+
+const $AddWord = styled.div`
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: ${blueColor["900"]};
+  text-decoration: none;
+  cursor: pointer;
 
   &:hover {
     background-color: ${blueColor["300"]};

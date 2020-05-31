@@ -40,7 +40,7 @@ const $Container = styled.section`
   display: flex;
   align-content: flex-start;
   justify-content: center;
-  margin-top: ${dimens.navbarHeight};
+  padding-top: ${dimens.navbarHeight};
 `;
 
 const $Card = styled.div`
