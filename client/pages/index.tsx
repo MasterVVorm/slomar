@@ -2,9 +2,10 @@ import Head from "next/head";
 import styled from "styled-components";
 
 import { SearchInput, BackgroundWords } from "@components";
-import { blueColor, APOLLO_URL, grayColor } from "@constants";
+import { blueColor, APOLLO_URL, grayColor, screenSize } from "@constants";
 import request from "graphql-request";
 import { TomObject } from "@interfaces";
+import { GetServerSidePropsContext } from "next";
 
 interface MainPageProps {
   toms: Array<TomObject>;
@@ -15,12 +16,18 @@ query getToms{
   toms{
     id,
     name,
+    description,
     words_amount
   }
 }
 `;
 
-const Tom = ({id, name, description = "Заглушка", words_amount }: TomObject) => (
+const Tom = ({
+  id,
+  name,
+  description = "Заглушка",
+  words_amount,
+}: TomObject) => (
   <$TomContainer>
     <$TomTitle>ТОМ {id}</$TomTitle>
     <$TomDescription>{description}</$TomDescription>
@@ -29,11 +36,13 @@ const Tom = ({id, name, description = "Заглушка", words_amount }: TomObj
 );
 
 export default function MainPage({ toms }: MainPageProps) {
-  console.log(toms);
   return (
     <$Container>
       <Head>
-        <title>Сломарь</title>
+        <title>
+          Сломарь | Первый словарь синонимов и метафор обсценной триады русского
+          языка
+        </title>
       </Head>
       <$Title>
         ПЕРВЫЙ СЛОВАРЬ СИННОНИМОВ И МЕТАФОР
@@ -52,7 +61,7 @@ export default function MainPage({ toms }: MainPageProps) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const toms = await request(APOLLO_URL, GET_TOMS);
 
   return {
@@ -76,9 +85,20 @@ const $Container = styled.div`
 
 const $Title = styled.div`
   font-family: "Russia";
-  font-size: 48px;
   text-align: center;
   color: ${blueColor["900"]};
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    font-size: 64px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    font-size: 48px;
+  }
+
+  @media screen and (max-width: ${screenSize.MIN_PC}) {
+    font-size: 36px;
+  }
 `;
 
 const $Toms = styled.div`
@@ -98,16 +118,30 @@ const $TomContainer = styled.div`
 
 const $TomTitle = styled.div`
   font-family: "Russia";
-  font-size: 24px;
   text-decoration: underline;
   color: ${blueColor["1100"]};
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    font-size: 36px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    font-size: 24px;
+  }
 `;
 
 const $TomDescription = styled.div`
   font-style: italic;
-  font-size: 10px;
   color: ${grayColor["600"]};
   margin-top: 8px;
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    font-size: 12px;
+  }
 `;
 
 const $TomWordsAmount = styled.div`
@@ -115,4 +149,12 @@ const $TomWordsAmount = styled.div`
   font-size: 24px;
   color: ${blueColor["1100"]};
   margin-top: 5px;
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    font-size: 36px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    font-size: 24px;
+  }
 `;

@@ -1,19 +1,35 @@
 import styled from "styled-components";
 import Link from "next/link";
+import { screenSize } from "@constants";
 
-export const Logo = () => (
+interface LogoProps {
+  style?: Object;
+}
+
+export const Logo = ({ style }: LogoProps) => (
   <Link href="/" passHref>
-    <$Container></$Container>
+    <$Container style={style}></$Container>
   </Link>
 );
 
 const $Container = styled.a`
-  position: relative;
-  width: 81px;
-  height: 29px;
+  position: absolute;
+  left: 15px;
+
   background-image: url("/assets/images/logo.svg");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 50% 50%;
-  margin-left: 15px;
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    top: 10px;
+    width: 91px;
+    height: 39px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    top: 10px;
+    width: 81px;
+    height: 29px;
+  }
 `;

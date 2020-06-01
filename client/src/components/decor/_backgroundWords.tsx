@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { blueColor } from "@constants";
+import { blueColor, screenSize } from "@constants";
 
 export const BackgroundWords = () => (
   <$Container>
@@ -20,9 +20,18 @@ const $Container = styled.div`
 
 const $Word = styled.div`
   font-family: Russia;
-  font-size: 36px;
-  line-height: 45px;
+  
   color: #ffffff;
   -webkit-text-stroke: .5px;
   -webkit-text-stroke-color: ${blueColor["1000"]};
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    font-size: 46px;
+  line-height: 46px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    font-size: 36px;
+  line-height: 45px;
+  }
 `;

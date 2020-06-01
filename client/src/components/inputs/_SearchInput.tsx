@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { grayColor, blueColor, dimens } from "@constants";
+import { grayColor, blueColor, dimens, screenSize } from "@constants";
 import { SearchButton } from "@components";
 import Link from "next/link";
 import { useState, useMemo, useCallback } from "react";
@@ -93,6 +93,16 @@ const $Container = styled.div`
   height: 35px;
   box-shadow: 0 0 0 1px ${grayColor["200"]};
   display: flex;
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    width: 500px;
+    height: 45px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    width: 400px;
+    height: 35px;
+  }
 `;
 
 const $Input = styled.input`
@@ -102,6 +112,14 @@ const $Input = styled.input`
   padding: 0 10px 0 10px;
   font-style: italic;
   color: ${blueColor["900"]};
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    font-size: 16px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    font-size: 14px;
+  }
 
   &::placeholder {
     color: ${blueColor["600"]};
@@ -113,8 +131,7 @@ const $SearchResults = styled.div`
   top: 110%;
   left: 0;
   display: block;
-  width: 400px;
-  max-height: 150px;
+
   background: white;
   overflow-y: auto;
   box-shadow: 0px 0px 8px rgba(50, 69, 103, 0.15);
@@ -122,6 +139,16 @@ const $SearchResults = styled.div`
   visibility: ${({ show }) => (show ? "visible" : "hidden")};
   transition: ${dimens.transition};
   transition-delay: 0.1s;
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    width: 500px;
+    max-height: 200px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    width: 400px;
+    max-height: 150px;
+  }
 `;
 
 const $SearchResult = styled.div`
@@ -130,12 +157,20 @@ const $SearchResult = styled.div`
   align-items: center;
   padding-left: 10px;
   width: 100%;
-  height: 30px;
   text-decoration: none;
-  font-size: 14px;
   color: ${blueColor["1100"]};
   transition: ${dimens.transition};
   cursor: pointer;
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    font-size: 16px;
+    height: 40px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    font-size: 14px;
+    height: 30px;
+  }
 
   &:hover {
     background-color: ${blueColor["300"]};
@@ -158,6 +193,16 @@ const $AddWord = styled.div`
   color: ${blueColor["900"]};
   text-decoration: none;
   cursor: pointer;
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    font-size: 16px;
+    height: 40px;
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    font-size: 14px;
+    height: 30px;
+  }
 
   &:hover {
     background-color: ${blueColor["300"]};
