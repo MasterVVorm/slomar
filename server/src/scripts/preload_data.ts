@@ -73,8 +73,10 @@ async function loadData() {
       }
     }
 
-    console.log("Data is uploaded to database!")
+    console.log(`Data from ${tom.sheetPath} file have been uploaded!`);
   }
+
+  connection.close();
 }
 
 loadData();
