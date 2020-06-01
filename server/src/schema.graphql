@@ -33,6 +33,7 @@ input MeaningInput {
 type Tom {
   id: ID!
   name: String!
+  description: String!
   created: String!
   updated: String!
   words_amount: Int

@@ -11,8 +11,7 @@ export const tomResolvers = {
       const toms = await connection.manager.find(Tom);
 
       for (let i = 0; i < toms.length; i++) {
-        const words = await connection.manager.find(Word, { where: { tom: toms[i] } });
-        console.log(words.length)
+        const words: Array<Word> = await connection.manager.find(Word, { where: { tom: toms[i] } });
         toms[i].words_amount = words.length;
       }
 

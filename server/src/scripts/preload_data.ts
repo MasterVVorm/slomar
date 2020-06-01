@@ -15,15 +15,18 @@ interface SheetArray {
 interface TomObject {
   name: string;
   sheetPath: string;
+  description: string;
 }
 
 const toms: Array<TomObject> = [
   {
     name: "Пизда",
+    description: "Это тот, где Бог создал Еву",
     sheetPath: "tom2.xlsx",
   },
   {
     name: "Ебаться",
+    description: "Это тот, где они съели яблоко",
     sheetPath: "tom3.xlsx",
   },
 ];
@@ -37,6 +40,7 @@ async function loadData() {
     if (!_tom) {
       _tom = new Tom();
       _tom.name = tom.name;
+      _tom.description = tom.description;
       await connection.manager.save(_tom);
     }
 

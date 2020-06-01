@@ -1,11 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from "typeorm";
-import { Word } from "./_word.entity";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Tom {
@@ -14,6 +7,9 @@ export class Tom {
 
   @Column({ type: "varchar" })
   name: string;
+
+  @Column({ type: "varchar" })
+  description: string;
 
   @CreateDateColumn()
   created: string;
