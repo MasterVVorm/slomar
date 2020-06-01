@@ -52,7 +52,9 @@ const $Text = styled.div`
 `;
 
 const $Container = styled.div`
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
   height: 100%;
   cursor: pointer;
 

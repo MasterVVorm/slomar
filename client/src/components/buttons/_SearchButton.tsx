@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { grayColor, dimens } from "@constants";
+import { grayColor, dimens, screenSize } from "@constants";
 
 interface SearchButtonProps {
   active: boolean;
@@ -33,6 +33,19 @@ const $Container = styled.button`
   background-color: ${({ active }) => (active ? grayColor["600"] : "white")};
   transition: ${dimens.transition};
   cursor: pointer;
+
+  @media screen and (min-width: ${screenSize.PC}) {
+    width: 45px;
+    height: 45px;
+    svg{
+      transform: scale(1.3);
+    }
+  }
+
+  @media screen and (max-width: ${screenSize.PC}) {
+    width: 35px;
+    height: 35px;
+  }
 
   svg {
     path {
